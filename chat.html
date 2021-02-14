@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 13px Helvetica, Arial;
+        }
+
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+
+        #messages {
+            margin-bottom: 40px
+        }
+    </style>
+</head>
+<body>
+<h1>socket.io使用room测试项目</h1>
+<label for="username"></label><input id="username" type="text">
+<label for="roomnum"></label><input id="roomnum" type="text">
+<button id="subButton">提交用户名和房间号</button>
+<button id="leaveRoomButton">离开当前所有房间</button>
+<!--<button id="roomListUserNamesButton">列出当前room中的所有用户</button>-->
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(function () {
+        socket=io()
+
+        // 提交按钮及其事件
+        function submitup() {
+            var username=document.querySelector('#username').value
+            var roomnum=document.querySelector('#roomnum').value
+            socket.emit('submit', {'username':username,'roomnum':roomnum})
+            socket.emit('roomJoin',roomnum)
+            socket.emit('roomListRoomNames','')
+            socket.emit('roomListUserNames',roomnum)
+        }
+        var subButton=document.querySelector('#subButton')
+        subButton.onclick=submitup
+        // 提交按钮及其事件结束
+
+
+        // leaveAllRooms
+        function leaveAllRooms() {
+            socket.emit('roomLeave','')
+        }
+        var leaveRoomButton=document.querySelector('#leaveRoomButton')
+        leaveRoomButton.onclick=leaveAllRooms
+        // leaveAllRooms结束
+
+
+        // roomListUserNames
+        // function roomListUserNames() {
+        //     socket.emit('roomListUserNames','')
+        //
+        // }
+        // var roomListUserNamesButton=document.querySelector('#roomListUserNamesButton')
+        // roomListUserNamesButton.onclick=roomListUserNames
+
+        // roomListUserNames结束
+    })
+</script>
+</body>
+
+</html>
